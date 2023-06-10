@@ -2,7 +2,9 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/jackc/pgtype"
@@ -307,6 +309,12 @@ func parseFilterParams(c echo.Context, filter *filters.Template) (*filters.Insta
 			instance.Params[p.Name] = formParams.Get(p.Name)
 		case filters.BooleanParam:
 			instance.Params[p.Name] = formParams.Get(p.Name) == "on"
+		case filters.IntegerParam:
+			instance.Params[p.Name], err = strconv.Atoi(formParams.Get(p.Name))
+			if err != nil {
+				message := fmt.Sprintf("invalid value %v for field %s", formParams.Get(p.Name), p.Name)
+				return nil, action, echo.NewHTTPError(http.StatusInternalServerError, message)
+			}
 		default:
 			return nil, action, echo.NewHTTPError(http.StatusInternalServerError, "unknown param type "+p.Type)
 		}

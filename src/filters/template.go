@@ -41,7 +41,7 @@ type Parameter struct {
 	Name        string      `validate:"required"`
 	Description string      `validate:"required"`
 	Link        string      `validate:"omitempty,url" yaml:",omitempty"`
-	Type        ParamType   `validate:"required,oneof=checkbox string list multiline"`
+	Type        ParamType   `validate:"required,oneof=checkbox string list multiline integer"`
 	OnlyIf      string      `validate:"omitempty,valid_only_if" yaml:",omitempty"`
 	Default     interface{} `validate:"valid_default"`
 	Presets     []Preset    `validate:"omitempty,preset_allowed,dive" yaml:",omitempty"`
@@ -51,6 +51,7 @@ type ParamType string
 
 const (
 	BooleanParam    ParamType = "checkbox"
+	IntegerParam    ParamType = "integer"
 	StringParam     ParamType = "string"
 	StringListParam ParamType = "list"
 	MultiLineParam  ParamType = "multiline"

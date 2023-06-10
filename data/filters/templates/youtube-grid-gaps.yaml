@@ -1,0 +1,52 @@
+title: "YouTube: fix the gaps in grid views"
+contributors:
+  - xvello
+tags:
+  - youtube
+params:
+  - name: remove-gaps
+    description: Remove gaps in the grid when videos are removed
+    type: checkbox
+    default: true
+  - name: per-row-enable
+    description: Force a number of videos per row (leave off to keep auto-detection)
+    type: checkbox
+    default: false
+  - name: per-row-count
+    description: Number of videos per row
+    type: integer
+    onlyif: per-row-enable
+    default: 4
+template: |
+  {{#if remove-gaps}}
+  {{! Match the ytd-rich-grid-row element and its #contents child, to disable their CSS boxing }}
+  www.youtube.com##ytd-rich-grid-row, #contents.ytd-rich-grid-row:style(display:contents !important;)
+  {{/if}}
+  {{#if per-row-enable}}
+  {{! Override the CSS variable that is normally updated by javascript based on window width }}
+  www.youtube.com##ytd-rich-grid-renderer:style(--ytd-rich-grid-items-per-row: {{ per-row-count }} !important;)
+  {{/if}}
+
+tests:
+  - params:
+      homepage: true
+      subscriptions: true
+    output: |
+      www.youtube.com##ytd-browse[page-subtype="home"] ytd-thumbnail-overlay-resume-playback-renderer:upward(ytd-grid-video-renderer,ytd-rich-item-renderer)
+      www.youtube.com##ytd-browse[page-subtype="channels"] ytd-thumbnail-overlay-resume-playback-renderer:upward(ytd-grid-video-renderer,ytd-rich-item-renderer)
+      www.youtube.com##ytd-browse[page-subtype="subscriptions"] ytd-thumbnail-overlay-resume-playback-renderer:upward(ytd-grid-video-renderer,ytd-rich-item-renderer)
+      www.youtube.com##ytd-browse[page-subtype="subscriptions"] ytd-video-renderer ytd-thumbnail-overlay-resume-playback-renderer:upward(ytd-item-section-renderer)
+  - params:
+      only-fully: true
+      search: true
+      recommendations: true
+    output: |
+      www.youtube.com##ytd-watch-next-secondary-results-renderer ytd-thumbnail-overlay-resume-playback-renderer #progress[style="width: 100%;"]:upward(ytd-compact-video-renderer)
+      www.youtube.com##ytd-search ytd-thumbnail-overlay-resume-playback-renderer #progress[style="width: 100%;"]:upward(ytd-video-renderer)
+
+---
+
+This filter hides videos you already watched from the homepage, to allow to focus only on new content.
+
+You can select below which pages to filter videos on, and whether you'd want to keep partially-viewed videos, or hide
+them as well (the default behaviour).

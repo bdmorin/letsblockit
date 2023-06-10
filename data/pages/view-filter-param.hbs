@@ -7,6 +7,15 @@
             {{>view-filter-pill-new name}}
         </label>
     </div>
+{{else if (eq type "integer")}}
+    <div class="mb-3{{#with OnlyIf}} ms-lg-4" data-hide-unless="{{this}}{{/with}}">
+        <label class="form-label" for="{{name}}">
+            {{description}}{{>view-filter-param-link this}}:
+            {{>view-filter-pill-new name}}
+        </label>
+        <input class="form-control" id="{{name}}" name="{{name}}" spellcheck="false"
+               type="number" min="1" value="{{lookup @root.data.params name}}">
+    </div>
 {{else if (eq type "string")}}
     <div class="mb-3{{#with OnlyIf}} ms-lg-4" data-hide-unless="{{this}}{{/with}}">
         <label class="form-label" for="{{name}}">

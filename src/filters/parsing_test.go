@@ -16,6 +16,8 @@ func buildValidator(t *testing.T) *validator.Validate {
 		switch fl.Field().Interface().(type) {
 		case bool:
 			return paramType == BooleanParam
+		case int:
+			return paramType == IntegerParam
 		case string:
 			return paramType == StringParam || paramType == MultiLineParam
 		case []string, []interface{}:
