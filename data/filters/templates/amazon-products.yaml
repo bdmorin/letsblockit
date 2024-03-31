@@ -10,7 +10,7 @@ params:
       - name: amazon-devices
         description: Hide Amazon devices (Echo, Kindle, FireTV) and accessories
         values:
-          - '/\bEcho (Dot|Show|Studio|Sub|Buds|Auto|Flex)\b/'
+          - '/\bEcho (Dot|Show|Studio|Sub|Buds|Auto|Flex|Pop)\b/'
           - '/\bEcho \(4\w+/'
           - '/\bKindle\b/'
           - '/\bFire TV (Stick|Cube)\b/'
